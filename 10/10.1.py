@@ -1,26 +1,26 @@
-with open("9-input.txt") as fin:
+with open("10-input.txt") as fin:
     data = fin.read()
 
-def firstInvalid(sequence, preambleLength):
-    for i in range(preambleLength, len(sequence)):
-        num = sequence[i]
-        # Find two numbers in the previous preambleLength numbers that sum to num
-        found = False
+def count_differences(joltages):
+    joltages.sort()
+    ones = 0
+    threes = 0
 
-        for j in range(i - preambleLength, i):
-            for k in range(j, i):
-                if sequence[j] + sequence[k] == num:
-                    found = True
-                    break
+    #print(joltages)
 
-            if found:
-                break
+    for i in range(len(joltages) - 1):
+        #print(joltages[i], joltages[i + 1])
 
-        if not found:
-            return num
+        diff = joltages[i + 1] - joltages[i]
+        if diff == 1:
+            ones += 1
+        elif diff == 3:
+            threes += 1
 
-    return -1
+    return ones, threes + 1
 
-sequence = [int(i) for i in data.split("\n")]
-ans = firstInvalid(sequence, 25)
-print(ans)
+# NOT CONSIDERING OUR DEVICE
+joltages = [0] + [int(i) for i in data.split("\n")]
+
+ones, threes = count_differences(joltages)
+print(ones * threes)

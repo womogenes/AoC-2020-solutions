@@ -1,39 +1,27 @@
-with open("9-input.txt") as fin:
+from functools import lru_cache
+
+with open("10-input.txt") as fin:
     data = fin.read()
 
-def firstInvalid(sequence, preambleLength):
-    for i in range(preambleLength, len(sequence)):
-        num = sequence[i]
-        # Find two numbers in the previous preambleLength numbers that sum to num
-        found = False
+joltages = [0] + [int(i) for i in data.split("\n")]
+joltages.sort()
 
-        for j in range(i - preambleLength, i):
-            for k in range(j, i):
-                if sequence[j] + sequence[k] == num:
-                    found = True
-                    break
+# Number of ways to connect to device given a source of joltates[index]
+@lru_cache(None)
+def dp(index):
+    #print(index)
 
-            if found:
-                break
+    if index == len(joltages) - 1:
+        return 1
 
-        if not found:
-            return num
+    total = 0
+    nextIndex = index + 1
+    #print(index, nextIndex)
+    while nextIndex < len(joltages) and joltages[nextIndex] - joltages[index] <= 3:
+        total += dp(nextIndex)
+        nextIndex += 1
 
-    return -1
+    return total
 
-sequence = [int(i) for i in data.split("\n")]
-invalidNum = firstInvalid(sequence, 25)
-
-# Create a list of prefix sums to speed up computation
-prefixSums = [0]
-for i in sequence:
-    prefixSums.append(prefixSums[-1] + i)
-
-for i in range(len(sequence)):
-    for j in range(i + 1, len(sequence)):
-        rangeSum = prefixSums[j + 1] - prefixSums[i]
-        if rangeSum == invalidNum:
-            low = min(sequence[i:j + 1])
-            hi = max(sequence[i:j + 1])
-            print(low + hi)
-            break
+ans = dp(0)
+print(ans)
