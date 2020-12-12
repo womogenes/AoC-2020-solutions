@@ -9,14 +9,11 @@ joltages.sort()
 # Number of ways to connect to device given a source of joltates[index]
 @lru_cache(None)
 def dp(index):
-    #print(index)
-
     if index == len(joltages) - 1:
         return 1
 
     total = 0
     nextIndex = index + 1
-    #print(index, nextIndex)
     while nextIndex < len(joltages) and joltages[nextIndex] - joltages[index] <= 3:
         total += dp(nextIndex)
         nextIndex += 1
